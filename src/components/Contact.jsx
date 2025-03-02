@@ -46,7 +46,7 @@ const Contact = () => {
   };
 
   return (
-    <div className="min-h-screen py-12 px-4">
+    <div id='contacts' className="min-h-screen py-12 px-4">
       <motion.div 
         className="max-w-md mx-auto"
         variants={containerVariants}

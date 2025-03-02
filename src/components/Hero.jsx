@@ -1,4 +1,4 @@
-import image from "../assets/front.png";
+import image from "../assets/frontavatar.png";
 import { motion } from "motion/react";
 import { HERO_CONTENT } from "../constants";
 

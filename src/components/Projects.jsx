@@ -3,7 +3,7 @@ import { PROJECTS } from '../constants'
 import { motion } from "motion/react"
 const Projects = () => {
   return (
-    <div className='border-b border-neutral-900 pb-4'>
+    <div id='projects' className='border-b border-neutral-900 pb-4'>
         <motion.h2
         whileInView={{opacity: 1, y: 0}}
         initial={{opacity: 0, y: -100}}
@@ -17,7 +17,7 @@ const Projects = () => {
                     initial={{opacity: 0, x: -100}}
                     transition={{duration: 1}}
                     className='w-full lg:w-1/4'>
-                        <img src={project.image} alt= {project.title} width={150} height={150} className='mb-6 rounded' />
+                        <a href={project.link} target='_blank'><img src={project.image} alt= {project.title} width={150} height={150} className='mb-6 rounded' /></a>    
                     </motion.div>
                     <motion.div
                     whileInView={{opacity: 1, x: 0}}
