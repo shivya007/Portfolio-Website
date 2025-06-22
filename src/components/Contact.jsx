@@ -1,137 +1,110 @@
-import React, { useState } from 'react';
-import { motion } from "motion/react"
+import { useState, useRef } from 'react';
+import { motion } from "framer-motion";
+import emailjs from '@emailjs/browser';
+import { Loader2, CheckCircle, XCircle } from 'lucide-react';
 
 const Contact = () => {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    message: ''
-  });
-  const [isSubmitted, setIsSubmitted] = useState(false);
+  const form = useRef();
+  const [status, setStatus] = useState("idle"); // idle | loading | success | error
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setIsSubmitted(true);
-    setTimeout(() => setIsSubmitted(false), 3000);
-    setFormData({ name: '', email: '', message: '' });
-  };
+    setStatus("loading");
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
-
-  const containerVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.6,
-        staggerChildren: 0.1
-      }
-    }
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, x: -20 },
-    visible: {
-      opacity: 1,
-      x: 0,
-      transition: { duration: 0.5 }
-    }
+    emailjs.sendForm(
+      import.meta.env.VITE_EMAILJS_SERVICE_ID,
+      import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
+      form.current,
+      import.meta.env.VITE_EMAILJS_PUBLIC_KEY
+    )
+    .then(() => {
+      setStatus("success");
+      form.current.reset();
+      setTimeout(() => setStatus("idle"), 4000);
+    })
+    .catch(() => {
+      setStatus("error");
+      setTimeout(() => setStatus("idle"), 4000);
+    });
   };
 
   return (
-    <div id='contacts' className="min-h-screen py-12 px-4">
+    <section id="contacts" className="min-h-screen py-24 px-4 bg-gradient-to-br from-[#0f0f0f] via-[#151515] to-[#0f0f0f] border-t border-neutral-900">
       <motion.div 
-        className="max-w-md mx-auto"
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
+        className="max-w-xl mx-auto bg-white/5 backdrop-blur-sm border border-white/10 p-8 rounded-2xl shadow-xl shadow-indigo-500/20"
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8 }}
       >
-        <motion.h2 
-          className="text-3xl font-bold text-center text-gray-200 mb-8"
-          variants={itemVariants}
-        >
-          Get in Touch
-        </motion.h2>
+        <h2 className="text-4xl font-bold text-center text-white mb-10 tracking-wider">
+          Contact <span className="text-indigo-400">Me</span>
+        </h2>
 
-        {isSubmitted ? (
-          <motion.div 
-            className="text-center py-8"
-            initial={{ opacity: 0, scale: 0.5 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5 }}
-          >
-            <p className="text-lg font-medium text-green-400">Message sent successfully!</p>
-          </motion.div>
-        ) : (
-          <motion.form 
-            onSubmit={handleSubmit} 
-            className="space-y-6"
-            variants={containerVariants}
-          >
-            <motion.div variants={itemVariants}>
-              <label htmlFor="name" className="block text-sm font-medium text-gray-300 mb-1">
-                Name
-              </label>
-              <input
-                type="text"
-                id="name"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                required
-                className="w-full rounded-md bg-gray-800 border border-gray-700 px-3 py-2 text-gray-100 focus:border-purple-500 focus:outline-none focus:ring-1 focus:ring-purple-500 transition-colors"
-              />
-            </motion.div>
-
-            <motion.div variants={itemVariants}>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-1">
-                Email
-              </label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                required
-                className="w-full rounded-md bg-gray-800 border border-gray-700 px-3 py-2 text-gray-100 focus:border-purple-500 focus:outline-none focus:ring-1 focus:ring-purple-500 transition-colors"
-              />
-            </motion.div>
-
-            <motion.div variants={itemVariants}>
-              <label htmlFor="message" className="block text-sm font-medium text-gray-300 mb-1">
-                Message
-              </label>
-              <textarea
-                id="message"
-                name="message"
-                value={formData.message}
-                onChange={handleChange}
-                required
-                rows={4}
-                className="w-full rounded-md bg-gray-800 border border-gray-700 px-3 py-2 text-gray-100 focus:border-purple-500 focus:outline-none focus:ring-1 focus:ring-purple-500 transition-colors"
-              />
-            </motion.div>
-
-            <motion.button
-              type="submit"
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className="w-full bg-purple-600 text-white py-3 px-4 rounded-md hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transition-colors"
-            >
-              Send Message
-            </motion.button>
-          </motion.form>
+        {/* Status Message */}
+        {status === "success" && (
+          <div className="flex items-center gap-2 bg-green-700/20 text-green-300 px-4 py-3 rounded-lg mb-6 shadow shadow-green-500/20">
+            <CheckCircle className="w-5 h-5" />
+            <span>Message sent successfully! Thank you 🎉</span>
+          </div>
         )}
+
+        {status === "error" && (
+          <div className="flex items-center gap-2 bg-red-700/20 text-red-400 px-4 py-3 rounded-lg mb-6 shadow shadow-red-500/20">
+            <XCircle className="w-5 h-5" />
+            <span>Something went wrong. Please try again later.</span>
+          </div>
+        )}
+
+        <form ref={form} onSubmit={handleSubmit} className="space-y-6">
+          <div>
+            <label className="text-white text-lg font-medium">Name</label>
+            <input
+              type="text"
+              name="user_name"
+              required
+              className="w-full mt-2 rounded-md bg-neutral-900 text-white px-4 py-3 border border-neutral-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            />
+          </div>
+
+          <div>
+            <label className="text-white text-lg font-medium">Email</label>
+            <input
+              type="email"
+              name="user_email"
+              required
+              className="w-full mt-2 rounded-md bg-neutral-900 text-white px-4 py-3 border border-neutral-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            />
+          </div>
+
+          <div>
+            <label className="text-white text-lg font-medium">Message</label>
+            <textarea
+              name="message"
+              rows="5"
+              required
+              className="w-full mt-2 rounded-md bg-neutral-900 text-white px-4 py-3 border border-neutral-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            ></textarea>
+          </div>
+
+          <button
+            type="submit"
+            disabled={status === "loading"}
+            className={`w-full flex items-center justify-center gap-2 bg-indigo-600 text-white text-lg py-3 px-6 rounded-md transition duration-300 shadow-md hover:shadow-xl
+              ${status === "loading" ? "opacity-70 cursor-not-allowed" : "hover:bg-indigo-700"}
+            `}
+          >
+            {status === "loading" ? (
+              <>
+                <Loader2 className="w-5 h-5 animate-spin" />
+                Sending...
+              </>
+            ) : (
+              "Send Message"
+            )}
+          </button>
+        </form>
       </motion.div>
-    </div>
+    </section>
   );
 };
 

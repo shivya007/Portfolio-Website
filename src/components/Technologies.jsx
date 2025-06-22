@@ -1,95 +1,60 @@
-import { RiReactjsLine } from "react-icons/ri";
-import {DiHtml5, DiCss3, DiJavascript1, DiJava, DiRedis,} from "react-icons/di"; // For HTML, CSS, JavaScript, MongoDB, and Java
-import { SiExpress, SiMongodb} from "react-icons/si"; // For Express.js and SQL (PostgreSQL as an example)
-import { TbBrandNextjs } from "react-icons/tb";
-import { FaNodeJs } from "react-icons/fa";
-import { BiLogoPostgresql } from "react-icons/bi";
-import { motion } from "motion/react"
-
-
-const iconVariants = (duration) => ({
-  initial: {y: -10},
-  animate: {
-    y: [10, -10],
-    transition: {
-      duration: duration,
-      ease: "linear",
-      repeat: Infinity,
-      repeatType: "reverse",
-    },
-  },
-});
-
+import { TECHNOLOGIES } from "../constants/index.js";
+import { motion } from "framer-motion";
+import TechnologyCard from "./ui/TechnologyCard";
 
 const Technologies = () => {
   return (
-    <div id="skills" className="border-b border-neutral-800 pb-24">
-      <motion.h2
-      whileInView={{opacity: 1, y: 0}} initial={{opacity: 0, y:-100}} transition={{duration: 1.5}}
-      className="my-20 text-center text-4xl">Technologies
-      </motion.h2>
-      <motion.div
-      whileInView={{opacity: 1, x: 0}} intial= {{opacity: 0, x: -100}} transition={{duration: 1.5}} 
-      className="flex flex-wrap items-center justify-center gap-4">
+    <section id="skills" className="border-b border-neutral-800 pb-24 px-4">
+      {/* Section Heading */}
+      <div className="text-center mb-16">
+        <motion.p
+          initial={{ opacity: 0, y: -20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="text-sm uppercase tracking-widest text-indigo-400 animate-in slide-in-from-top fade-in"
+        >
+          Tools I Work With
+        </motion.p>
+
+        <motion.h2
+          initial={{ opacity: 0, y: -60 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          animate={{ y: [0, -8, 0] }}
+          transition={{
+            duration: 2,
+            ease: "easeInOut",
+          }}
+          className="text-4xl sm:text-5xl font-bold text-white drop-shadow-md animate-in fade-in"
+        >
+          Technologies
+        </motion.h2>
+
+        {/* Underline accent */}
         <motion.div
-        variants={iconVariants(2.5)} intial="intial" animate="animate"
-        className="rounded-2xl border-4 border-neutral-800 p-4">
-          <DiJava className="text-7xl text-blue-500" /> {/* Java */}
-        </motion.div>
+          initial={{ scaleX: 0 }}
+          whileInView={{ scaleX: 1 }}
+          transition={{ duration: 0.8 }}
+          className="mt-4 mx-auto h-1 w-24 bg-indigo-500 origin-center animate-in fade-in"
+        />
+      </div>
+
+      {/* Auto-scrolling carousel */}
+      <div className="relative overflow-hidden">
+        {/* Invisible scroll track */}
+        <div className="absolute bottom-0 left-0 right-0 h-1 bg-neutral-800 rounded-full w-full z-0" />
+
         <motion.div
-        variants={iconVariants(3)} intial="intial" animate="animate" 
-        className="rounded-2xl border-4 border-neutral-800 p-4">
-          <DiHtml5 className="text-7xl text-orange-500" /> {/* HTML */}
+          className="flex gap-10 min-w-max animate-marquee hover:[animation-play-state:paused] cursor-pointer"
+        >
+          {[...TECHNOLOGIES, ...TECHNOLOGIES].map((tech, idx) => (
+            <div key={idx} className="flex flex-col items-center min-w-[100px]">
+              <TechnologyCard tech={tech} duration={tech.duration} />
+              <p className="text-sm text-neutral-300 mt-2 text-center">{tech.name}</p>
+            </div>
+          ))}
         </motion.div>
-        <motion.div
-        variants={iconVariants(5)} intial="intial" animate="animate"
-        className="rounded-2xl border-4 border-neutral-800 p-4">
-          <DiCss3 className="text-7xl text-blue-500" /> {/* CSS */}
-        </motion.div>
-        <motion.div
-        variants={iconVariants(4)} intial="intial" animate="animate"
-        className="rounded-2xl border-4 border-neutral-800 p-4">
-          <DiJavascript1 className="text-7xl text-yellow-400" />{" "}
-          {/* JavaScript */}
-        </motion.div>
-        <motion.div
-        variants={iconVariants(6)} intial="intial" animate="animate"
-        className="rounded-2xl border-4 border-neutral-800 p-4">
-          <RiReactjsLine className="text-7xl text-cyan-400" /> {/* React */}
-        </motion.div>
-        <motion.div
-        variants={iconVariants(6)} intial="intial" animate="animate"
-        className="rounded-2xl border-4 border-neutral-800 p-4">
-          <SiExpress className="text-7xl text-gray-400" /> {/* Express */}
-        </motion.div>
-        <motion.div
-        variants={iconVariants(5)} intial="intial" animate="animate"
-        className="rounded-2xl border-4 border-neutral-800 p-4">
-          <TbBrandNextjs className="text-7xl text-gray-800" /> {/* Next.js */}
-        </motion.div>
-        <motion.div
-        variants={iconVariants(5)} intial="intial" animate="animate" 
-        className="rounded-2xl border-4 border-neutral-800 p-4">
-          <SiMongodb className="text-7xl text-green-500" /> {/* MongoDB */}
-        </motion.div>
-        <motion.div
-        variants={iconVariants(4)} intial="intial" animate="animate"
-        className="rounded-2xl border-4 border-neutral-800 p-4">
-          <DiRedis className="text-7xl text-red-700" /> {/* Redis */}
-        </motion.div>
-        <motion.div
-        variants={iconVariants(6)} intial="intial" animate="animate" 
-        className="rounded-2xl border-4 border-neutral-800 p-4">
-          <FaNodeJs className="text-7xl text-green-500" /> {/* Node.js */}
-        </motion.div>
-        <motion.div 
-        variants={iconVariants(5)} intial="intial" animate="animate"
-        className="rounded-2xl border-4 border-neutral-800 p-4">
-          <BiLogoPostgresql className="text-7xl text-sky-500" />{" "}
-          {/* PostgreSQL */}
-        </motion.div>
-      </motion.div>
-    </div>
+      </div>
+    </section>
   );
 };
 

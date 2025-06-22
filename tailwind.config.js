@@ -1,4 +1,5 @@
 import tailwindcssAnimate from "tailwindcss-animate";
+import scrollbarHide from 'tailwind-scrollbar-hide';
 /** @type {import('tailwindcss').Config} */
 export default {
     darkMode: ["class"],
@@ -55,9 +56,20 @@ export default {
   				'4': 'hsl(var(--chart-4))',
   				'5': 'hsl(var(--chart-5))'
   			}
-  		}
+  		},
+
+	animation: {
+    marquee: "marquee 30s linear infinite",
+  },
+  keyframes: {
+    marquee: {
+      "0%": { transform: "translateX(0%)" },
+      "100%": { transform: "translateX(-50%)" },
+    },
+  },
   	}
   },
   /* plugins: [require("tailwindcss-animate")], */
-  plugins: [tailwindcssAnimate],
+  plugins: [tailwindcssAnimate, scrollbarHide],
+  
 }
